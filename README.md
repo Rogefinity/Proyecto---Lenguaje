@@ -1,2 +1,2 @@
-# Proyecto---Lenguaje
+# Proyecto-Lenguaje
 Proyecto - Lenguaje

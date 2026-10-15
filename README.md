@@ -1,15 +1,10 @@
 # Proyecto-Lenguaje
 # Proyecto Integrador: Lenguajes de Computación
 **Estudiante:** 
-Rogelio Sotomayor Carrasco
-Carlos Jesús Graniel González
-Carlos Andrés Hernández Díaz
-Nico Trujillo Beristain
-**No. de cuenta:** 
-195721
-200871
-200711
-200408
+*Rogelio Sotomayor Carrasco - 195721*
+*Carlos Jesús Graniel González - 200871*
+*Carlos Andrés Hernández Díaz - 200711*
+*Nico Trujillo Beristain - 200408*
 **Materia:** Lenguajes de Computación — IBERO Puebla  
 **Profesor:** Paulo Daniel Vázquez Mora  
 

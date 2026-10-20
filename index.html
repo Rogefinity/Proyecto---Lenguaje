@@ -16,12 +16,28 @@
       </div>
     </header>
 
-    <!-- APARTADO 1: LENGUAJES Y AUTÓMATAS -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">1. Lenguajes y Autómatas</h2>
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+
         <div class="border p-4 rounded-lg bg-slate-50">
-          <h3 class="font-bold mb-2">Evaluador de Autómatas (Matriz)</h3>
+          <h3 class="font-bold mb-2">Operaciones con Lenguajes</h3>
+          <label class="block text-xs font-semibold">L1 (separado por comas):</label>
+          <input id="l1" value="a, ab, b" class="w-full border p-2 rounded mb-2 text-sm">
+          <label class="block text-xs font-semibold">L2 (separado por comas):</label>
+          <input id="l2" value="b, ba, bb" class="w-full border p-2 rounded mb-2 text-sm">
+          <label class="block text-xs font-semibold">Operación:</label>
+          <select id="op_lenguaje" class="w-full border p-2 rounded mb-3 text-sm">
+            <option value="union">Unión</option>
+            <option value="interseccion">Intersección</option>
+            <option value="concatenacion">Concatenación</option>
+          </select>
+          <button onclick="ejecutarLenguaje()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Evaluar Lenguaje</button>
+          <div id="res_lenguaje" class="mt-3 text-sm"></div>
+        </div>
+
+        <div class="border p-4 rounded-lg bg-slate-50">
+          <h3 class="font-bold mb-2">Evaluador de Autómatas</h3>
           <div class="grid grid-cols-2 gap-2 mb-2">
             <div>
               <label class="block text-xs font-semibold">Tipo:</label>
@@ -38,15 +54,19 @@
           </div>
           <label class="block text-xs font-semibold">Matriz (JSON):</label>
           <textarea id="auto_trans" rows="3" class="w-full border p-2 rounded font-mono text-xs mb-2">{"q0": {"0": ["q0"], "1": ["q1"], "e": ["q1"]}, "q1": {"1": ["q2"]}, "q2": {"0": ["q2"], "1": ["q2"]}}</textarea>
-          <button onclick="ejecutarAutomata()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Evaluar</button>
+          <button onclick="ejecutarAutomata()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Evaluar Matriz</button>
           <div id="res_automata" class="mt-3 text-sm"></div>
         </div>
       </div>
+
+      <div class="border p-4 rounded-lg bg-white shadow-sm">
+        <h3 class="font-bold mb-2 text-sm text-center">Gráfica de Resultados (Elementos / Estados)</h3>
+        <canvas id="graficaAuto" height="60"></canvas>
+      </div>
     </section>
 
-    <!-- APARTADO 2: GRAFOS -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
-      <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">2. Búsqueda en Grafos (BFS, Greedy, A*)</h2>
+      <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">2. Búsqueda en Grafos</h2>
       <div class="grid md:grid-cols-3 gap-4 mb-4">
         <div class="md:col-span-2">
           <label class="block text-xs font-semibold">Grafo Ponderado (JSON):</label>
@@ -57,14 +77,20 @@
             <input id="g_origen" value="A" class="w-1/2 border p-2 rounded text-sm" placeholder="Origen">
             <input id="g_destino" value="J" class="w-1/2 border p-2 rounded text-sm" placeholder="Destino">
           </div>
-          <button onclick="ejecutarGrafos()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full mb-2">Analizar Rutas</button>
+
+          <label class="block text-xs font-semibold mb-1">Tipo de búsqueda a visualizar:</label>
+          <select id="alg_grafo" class="w-full border p-2 rounded mb-3 text-sm">
+            <option value="bfs">BFS (Anchura)</option>
+            <option value="greedy" selected>Greedy (Voraz)</option>
+            <option value="a_star">A* (Estrella)</option>
+          </select>
+          <button onclick="ejecutarGrafos()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full mb-2">Analizar y Graficar Ruta</button>
         </div>
       </div>
       <div id="mynetwork" class="w-full h-80 border rounded-lg bg-slate-50 mb-4"></div>
       <div id="res_grafos"></div>
     </section>
 
-    <!-- APARTADO 3: ORDENAMIENTO Y RENDIMIENTO -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">3. Algoritmos de Ordenamiento</h2>
       <div class="grid md:grid-cols-2 gap-6">
@@ -72,12 +98,12 @@
           <label class="block text-xs font-semibold">Datos (separados por coma):</label>
           <input id="ord_datos" value="64, 34, 25, 12, 22, 11, 90, 5, 77, 1" class="w-full border p-2 rounded text-sm mb-3">
           <div class="grid grid-cols-2 gap-2 text-sm mb-3">
-            <label><input type="checkbox" class="alg_ord" value="bubble" checked> Bubble</label>
-            <label><input type="checkbox" class="alg_ord" value="merge" checked> Merge</label>
-            <label><input type="checkbox" class="alg_ord" value="quick" checked> Quick</label>
+            <label><input type="checkbox" class="alg_ord" value="bubble" checked> Bubble Sort</label>
+            <label><input type="checkbox" class="alg_ord" value="merge" checked> Merge Sort</label>
+            <label><input type="checkbox" class="alg_ord" value="quick" checked> Quick Sort</label>
           </div>
           <button onclick="ejecutarOrdenamiento()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Comparar Rendimiento</button>
-          <div id="res_ordenamiento" class="mt-4 text-sm"></div>
+          <div id="res_ordenamiento" class="mt-4 text-sm font-mono bg-slate-50 p-2 border rounded"></div>
         </div>
         <div>
           <canvas id="graficaOrdenamiento" height="220"></canvas>
@@ -87,7 +113,34 @@
   </div>
 
   <script>
-    // Funciones de conexión al Backend
+    let chartAuto = null;
+
+    function graficarSeccion1(labels, data, labelTitle, color) {
+      if(chartAuto) chartAuto.destroy();
+      chartAuto = new Chart(document.getElementById('graficaAuto'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{ label: labelTitle, data: data, backgroundColor: color }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    async function ejecutarLenguaje() {
+      const la = document.getElementById('l1').value.split(',').map(s => s.trim()).filter(Boolean);
+      const lb = document.getElementById('l2').value.split(',').map(s => s.trim()).filter(Boolean);
+      const operacion = document.getElementById('op_lenguaje').value;
+      const r = await fetch('/api/lenguajes/operar', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({lenguaje_a: la, lenguaje_b: lb, operacion, potencia: 2})
+      });
+      const d = await r.json();
+      document.getElementById('res_lenguaje').innerHTML = `<p class="text-green-700 font-bold">Res: { ${d.resultado.join(', ')} }</p>`;
+      
+      graficarSeccion1(['L1', 'L2', 'Resultado'], [la.length, lb.length, d.cardinalidad], 'Cantidad de elementos', '#4f46e5');
+    }
+
     async function ejecutarAutomata() {
       const tipo = document.getElementById('auto_tipo').value;
       const palabra = document.getElementById('auto_palabra').value;
@@ -98,28 +151,52 @@
       });
       const d = await r.json();
       document.getElementById('res_automata').innerHTML = d.pertenece ? '<span class="text-green-600 font-bold">ACEPTADA</span>' : '<span class="text-red-600 font-bold">RECHAZADA</span>';
+      
+      const estTotal = Object.keys(transiciones).length;
+      graficarSeccion1(['Estados Totales', 'Estados Recorridos', 'Estados de Aceptación Alcanzados'], 
+                       [estTotal, d.estados_alcanzados.length, d.estados_aceptacion_alcanzados.length], 
+                       'Métricas del Autómata', '#dc2626');
     }
 
     async function ejecutarGrafos() {
       const grafo = JSON.parse(document.getElementById('grafo_json').value);
+      const algoritmoSeleccionado = document.getElementById('alg_grafo').value; // Solo toma el seleccionado
+      
       const r = await fetch('/search/comparar-grafos', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ grafo, origen: document.getElementById('g_origen').value, destino: document.getElementById('g_destino').value, limite_nodos: 1.0 })
+        body: JSON.stringify({ grafo, origen: document.getElementById('g_origen').value, destino: document.getElementById('g_destino').value, algoritmos: [algoritmoSeleccionado], limite_nodos: 1.0 })
       });
       const d = await r.json();
-      dibujarGrafo(grafo, d.resultados.length ? d.resultados[d.resultados.length - 1].ruta : []);
+      const resultado = d.resultados[0]; 
+      
+      dibujarGrafo(grafo, resultado.ruta);
+
+      document.getElementById('res_grafos').innerHTML = `
+        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg mt-4">
+          <p class="font-bold text-indigo-800 text-lg mb-2">Resultados para: ${resultado.algoritmo}</p>
+          <p><strong>Ruta hallada:</strong> ${resultado.ruta.join(' → ') || 'No se encontró ruta'}</p>
+          <p><strong>Costo Total:</strong> ${resultado.costo_camino}</p>
+          <p><strong>Nodos Visitados:</strong> ${resultado.nodos_visitados}</p>
+          <p><strong>Tiempo de ejecución:</strong> ${resultado.tiempo_ms} ms</p>
+        </div>
+      `;
     }
 
     function dibujarGrafo(grafo, ruta) {
       const nodes = [], edges = [];
       const enRuta = new Set(ruta);
+      const aristasRuta = new Set();
+      for (let i = 0; i < ruta.length - 1; i++) aristasRuta.add(`${ruta[i]}->${ruta[i+1]}`);
+
       for (const nodo of Object.keys(grafo)) {
         nodes.push({ id: nodo, label: nodo, color: enRuta.has(nodo) ? '#dc2626' : '#4f46e5', font: {color: 'white'} });
-        for (const [vecino, peso] of grafo[nodo]) edges.push({ from: nodo, to: vecino, label: String(peso), arrows: 'to' });
+        for (const [vecino, peso] of grafo[nodo]) {
+          const esCamino = aristasRuta.has(`${nodo}->${vecino}`);
+          edges.push({ from: nodo, to: vecino, label: String(peso), arrows: 'to', width: esCamino ? 4 : 1, color: esCamino ? '#dc2626' : '#9ca3af' });
+        }
       }
       new vis.Network(document.getElementById('mynetwork'), {nodes, edges}, {physics: true});
     }
-
     let chartOrd = null;
     async function ejecutarOrdenamiento() {
       const datos = document.getElementById('ord_datos').value.split(',').map(n => parseInt(n));
@@ -129,7 +206,8 @@
         body: JSON.stringify({datos, algoritmos})
       });
       const d = await r.json();
-      document.getElementById('res_ordenamiento').innerHTML = `Ordenado: [${d.datos_ordenados}]`;
+      document.getElementById('res_ordenamiento').innerHTML = `Arreglo Ordenado:<br>[${d.datos_ordenados.join(', ')}]`;
+      
       if(chartOrd) chartOrd.destroy();
       chartOrd = new Chart(document.getElementById('graficaOrdenamiento'), {
         type: 'bar',

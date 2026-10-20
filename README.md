@@ -31,9 +31,6 @@ Repositorio unificado en **FastAPI** que integra los backends, endpoints y visua
    - `POST /api/ordenamiento/comparar`: Permite seleccionar al menos 2 algoritmos de un catálogo (*Bubble Sort, Insertion Sort, Selection Sort, Merge Sort, Quick Sort*), devolviendo el conjunto ordenado, tiempo de ejecución, memoria consumida y gráfica comparativa de performance.
 
 # Checkpoint 2. Implementación de frontend
-**Estudiante:** Rogelio Sotomayor Carrasco  
-**No. de cuenta:** 195721  
-**Materia:** Lenguajes de Computación — IBERO Puebla  
 
 ## Descripción General
 Este repositorio contiene la implementación unificada del Reto Integrador. Se integra un **Backend** desarrollado en FastAPI con una arquitectura modular para las Actividades 3, 6, 11, 12 y 13, y un **Frontend** interactivo (GUI) que permite al usuario evaluar los tres apartados principales del sistema de manera visual y funcional.

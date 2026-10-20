@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Frontend - Proyecto Integrador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-6">
+  <div class="max-w-6xl mx-auto">
+    <header class="bg-indigo-700 text-white p-6 rounded-xl shadow mb-6 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold">Reto Integrador: Frontend GUI</h1>
+        <p class="text-sm opacity-90">Evaluación de los 3 apartados principales del sistema</p>
+      </div>
+    </header>
+
+    <!-- APARTADO 1: LENGUAJES Y AUTÓMATAS -->
+    <section class="bg-white p-6 rounded-xl shadow mb-8">
+      <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">1. Lenguajes y Autómatas</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="border p-4 rounded-lg bg-slate-50">
+          <h3 class="font-bold mb-2">Evaluador de Autómatas (Matriz)</h3>
+          <div class="grid grid-cols-2 gap-2 mb-2">
+            <div>
+              <label class="block text-xs font-semibold">Tipo:</label>
+              <select id="auto_tipo" class="w-full border p-2 rounded text-sm">
+                <option value="AFD">AFD</option>
+                <option value="AFND">AFND</option>
+                <option value="AFND-e" selected>AFND-ε</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold">Palabra:</label>
+              <input id="auto_palabra" value="01" class="w-full border p-2 rounded text-sm">
+            </div>
+          </div>
+          <label class="block text-xs font-semibold">Matriz (JSON):</label>
+          <textarea id="auto_trans" rows="3" class="w-full border p-2 rounded font-mono text-xs mb-2">{"q0": {"0": ["q0"], "1": ["q1"], "e": ["q1"]}, "q1": {"1": ["q2"]}, "q2": {"0": ["q2"], "1": ["q2"]}}</textarea>
+          <button onclick="ejecutarAutomata()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Evaluar</button>
+          <div id="res_automata" class="mt-3 text-sm"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APARTADO 2: GRAFOS -->
+    <section class="bg-white p-6 rounded-xl shadow mb-8">
+      <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">2. Búsqueda en Grafos (BFS, Greedy, A*)</h2>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="md:col-span-2">
+          <label class="block text-xs font-semibold">Grafo Ponderado (JSON):</label>
+          <textarea id="grafo_json" rows="4" class="w-full border p-2 rounded font-mono text-xs">{"A": [["B", 15], ["C", 22], ["D", 10]], "B": [["E", 35], ["F", 18]], "C": [["E", 20], ["G", 45]], "D": [["F", 28], ["G", 30]], "E": [["H", 12], ["I", 25]], "F": [["H", 40], ["I", 15]], "G": [["I", 10], ["J", 50]], "H": [["J", 14]], "I": [["J", 8]], "J": []}</textarea>
+        </div>
+        <div>
+          <div class="flex gap-2 mb-2">
+            <input id="g_origen" value="A" class="w-1/2 border p-2 rounded text-sm" placeholder="Origen">
+            <input id="g_destino" value="J" class="w-1/2 border p-2 rounded text-sm" placeholder="Destino">
+          </div>
+          <button onclick="ejecutarGrafos()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full mb-2">Analizar Rutas</button>
+        </div>
+      </div>
+      <div id="mynetwork" class="w-full h-80 border rounded-lg bg-slate-50 mb-4"></div>
+      <div id="res_grafos"></div>
+    </section>
+
+    <!-- APARTADO 3: ORDENAMIENTO Y RENDIMIENTO -->
+    <section class="bg-white p-6 rounded-xl shadow mb-8">
+      <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">3. Algoritmos de Ordenamiento</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs font-semibold">Datos (separados por coma):</label>
+          <input id="ord_datos" value="64, 34, 25, 12, 22, 11, 90, 5, 77, 1" class="w-full border p-2 rounded text-sm mb-3">
+          <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+            <label><input type="checkbox" class="alg_ord" value="bubble" checked> Bubble</label>
+            <label><input type="checkbox" class="alg_ord" value="merge" checked> Merge</label>
+            <label><input type="checkbox" class="alg_ord" value="quick" checked> Quick</label>
+          </div>
+          <button onclick="ejecutarOrdenamiento()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Comparar Rendimiento</button>
+          <div id="res_ordenamiento" class="mt-4 text-sm"></div>
+        </div>
+        <div>
+          <canvas id="graficaOrdenamiento" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Funciones de conexión al Backend
+    async function ejecutarAutomata() {
+      const tipo = document.getElementById('auto_tipo').value;
+      const palabra = document.getElementById('auto_palabra').value;
+      const transiciones = JSON.parse(document.getElementById('auto_trans').value);
+      const r = await fetch('/api/automata/evaluar-matriz', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ tipo, palabra, alfabeto: ["0","1"], estados: Object.keys(transiciones), estado_inicial: "q0", estados_finales: ["q2"], transiciones })
+      });
+      const d = await r.json();
+      document.getElementById('res_automata').innerHTML = d.pertenece ? '<span class="text-green-600 font-bold">ACEPTADA</span>' : '<span class="text-red-600 font-bold">RECHAZADA</span>';
+    }
+
+    async function ejecutarGrafos() {
+      const grafo = JSON.parse(document.getElementById('grafo_json').value);
+      const r = await fetch('/search/comparar-grafos', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ grafo, origen: document.getElementById('g_origen').value, destino: document.getElementById('g_destino').value, limite_nodos: 1.0 })
+      });
+      const d = await r.json();
+      dibujarGrafo(grafo, d.resultados.length ? d.resultados[d.resultados.length - 1].ruta : []);
+    }
+
+    function dibujarGrafo(grafo, ruta) {
+      const nodes = [], edges = [];
+      const enRuta = new Set(ruta);
+      for (const nodo of Object.keys(grafo)) {
+        nodes.push({ id: nodo, label: nodo, color: enRuta.has(nodo) ? '#dc2626' : '#4f46e5', font: {color: 'white'} });
+        for (const [vecino, peso] of grafo[nodo]) edges.push({ from: nodo, to: vecino, label: String(peso), arrows: 'to' });
+      }
+      new vis.Network(document.getElementById('mynetwork'), {nodes, edges}, {physics: true});
+    }
+
+    let chartOrd = null;
+    async function ejecutarOrdenamiento() {
+      const datos = document.getElementById('ord_datos').value.split(',').map(n => parseInt(n));
+      const algoritmos = Array.from(document.querySelectorAll('.alg_ord:checked')).map(cb => cb.value);
+      const r = await fetch('/api/ordenamiento/comparar', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({datos, algoritmos})
+      });
+      const d = await r.json();
+      document.getElementById('res_ordenamiento').innerHTML = `Ordenado: [${d.datos_ordenados}]`;
+      if(chartOrd) chartOrd.destroy();
+      chartOrd = new Chart(document.getElementById('graficaOrdenamiento'), {
+        type: 'bar',
+        data: {
+          labels: d.comparativa.map(x => x.algoritmo),
+          datasets: [{label: 'Tiempo (ms)', data: d.comparativa.map(x => x.tiempo_ms), backgroundColor: '#4f46e5'}]
+        }
+      });
+    }
+  </script>
+</body>
+</html>

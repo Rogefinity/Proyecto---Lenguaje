@@ -30,7 +30,7 @@ Repositorio unificado en **FastAPI** que integra los backends, endpoints y visua
 4. **Módulo de Ordenamiento y Performance (Actividad 13)**
    - `POST /api/ordenamiento/comparar`: Permite seleccionar al menos 2 algoritmos de un catálogo (*Bubble Sort, Insertion Sort, Selection Sort, Merge Sort, Quick Sort*), devolviendo el conjunto ordenado, tiempo de ejecución, memoria consumida y gráfica comparativa de performance.
 
-# Proyecto Integrador: Lenguajes de Computación (Checkpoint 2 - Frontend)
+# Checkpoint 2. Implementación de frontend
 **Estudiante:** Rogelio Sotomayor Carrasco  
 **No. de cuenta:** 195721  
 **Materia:** Lenguajes de Computación — IBERO Puebla  

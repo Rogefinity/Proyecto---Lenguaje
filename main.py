@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import PlainTextResponse, JSONResponse
+from fastapi.responses import PlainTextResponse, JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from schemas import LenguajesInput, AutomataInput, GrafoInput, OrdenamientoInput
 from modulos.act3_lenguajes import evaluar_lenguaje
@@ -10,9 +11,11 @@ from modulos.act13_ordenamiento import comparar_ordenamientos
 
 app = FastAPI(title="Proyecto Integrador - Lenguajes de Computación")
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 @app.get("/")
-def estado_servidor():
-    return {"mensaje": "API Activa", "docs": "/docs"}
+def servir_interfaz():
+    return FileResponse("static/index.html")
 
 @app.post("/api/lenguajes/operar")
 def endpoint_lenguajes(datos: LenguajesInput):

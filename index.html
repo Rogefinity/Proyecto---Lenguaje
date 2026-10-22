@@ -12,14 +12,15 @@
     <header class="bg-indigo-700 text-white p-6 rounded-xl shadow mb-6 flex justify-between items-center">
       <div>
         <h1 class="text-2xl font-bold">Reto Integrador: Frontend GUI</h1>
-        <p class="text-sm opacity-90">Evaluación de los 3 apartados principales del sistema</p>
+        <p class="text-sm opacity-90">Evaluación interactiva sin código manual</p>
       </div>
     </header>
 
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">1. Lenguajes y Autómatas</h2>
       <div class="grid md:grid-cols-2 gap-6 mb-6">
-
+        
+        <!-- Lenguajes -->
         <div class="border p-4 rounded-lg bg-slate-50">
           <h3 class="font-bold mb-2">Operaciones con Lenguajes</h3>
           <label class="block text-xs font-semibold">L1 (separado por comas):</label>
@@ -36,61 +37,86 @@
           <div id="res_lenguaje" class="mt-3 text-sm"></div>
         </div>
 
+        <!-- Autómatas Interactivo -->
         <div class="border p-4 rounded-lg bg-slate-50">
-          <h3 class="font-bold mb-2">Evaluador de Autómatas</h3>
-          <div class="grid grid-cols-2 gap-2 mb-2">
-            <div>
-              <label class="block text-xs font-semibold">Tipo:</label>
-              <select id="auto_tipo" class="w-full border p-2 rounded text-sm">
-                <option value="AFD">AFD</option>
-                <option value="AFND">AFND</option>
-                <option value="AFND-e" selected>AFND-ε</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold">Palabra:</label>
-              <input id="auto_palabra" value="01" class="w-full border p-2 rounded text-sm">
-            </div>
+          <h3 class="font-bold mb-2">Constructor de Autómatas</h3>
+          <div class="flex gap-2 mb-2">
+            <select id="auto_tipo" class="w-1/2 border p-2 rounded text-sm">
+              <option value="AFD">AFD</option>
+              <option value="AFND">AFND</option>
+              <option value="AFND-e" selected>AFND-ε</option>
+            </select>
+            <input id="auto_palabra" value="01" placeholder="Palabra a evaluar" class="w-1/2 border p-2 rounded text-sm">
           </div>
-          <label class="block text-xs font-semibold">Matriz (JSON):</label>
-          <textarea id="auto_trans" rows="3" class="w-full border p-2 rounded font-mono text-xs mb-2">{"q0": {"0": ["q0"], "1": ["q1"], "e": ["q1"]}, "q1": {"1": ["q2"]}, "q2": {"0": ["q2"], "1": ["q2"]}}</textarea>
-          <button onclick="ejecutarAutomata()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Evaluar Matriz</button>
+          
+          <label class="block text-xs font-semibold mt-3 mb-1">Añadir Transición (Regla):</label>
+          <div class="flex gap-2 mb-2">
+            <input id="t_origen" placeholder="De (q0)" class="w-1/4 border p-1 rounded text-sm">
+            <input id="t_simbolo" placeholder="Símbolo (0, e)" class="w-1/4 border p-1 rounded text-sm">
+            <input id="t_destino" placeholder="A (q1,q2)" class="w-1/3 border p-1 rounded text-sm">
+            <button onclick="addTransicion()" class="w-1/6 bg-green-600 text-white rounded text-xl font-bold">+</button>
+          </div>
+          
+          <ul id="lista_transiciones" class="bg-white border rounded h-20 overflow-y-auto text-xs p-2 mb-2"></ul>
+          <button onclick="limpiarAutomata()" class="text-xs text-red-600 mb-2 underline">Limpiar reglas</button>
+          
+          <button onclick="ejecutarAutomata()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Evaluar Automata</button>
           <div id="res_automata" class="mt-3 text-sm"></div>
         </div>
       </div>
-
+      
       <div class="border p-4 rounded-lg bg-white shadow-sm">
-        <h3 class="font-bold mb-2 text-sm text-center">Gráfica de Resultados (Elementos / Estados)</h3>
+        <h3 class="font-bold mb-2 text-sm text-center">Gráfica de Resultados</h3>
         <canvas id="graficaAuto" height="60"></canvas>
       </div>
     </section>
 
+    <!-- 2. BÚSQUEDA EN GRAFOS -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">2. Búsqueda en Grafos</h2>
       <div class="grid md:grid-cols-3 gap-4 mb-4">
-        <div class="md:col-span-2">
-          <label class="block text-xs font-semibold">Grafo Ponderado (JSON):</label>
-          <textarea id="grafo_json" rows="4" class="w-full border p-2 rounded font-mono text-xs">{"A": [["B", 15], ["C", 22], ["D", 10]], "B": [["E", 35], ["F", 18]], "C": [["E", 20], ["G", 45]], "D": [["F", 28], ["G", 30]], "E": [["H", 12], ["I", 25]], "F": [["H", 40], ["I", 15]], "G": [["I", 10], ["J", 50]], "H": [["J", 14]], "I": [["J", 8]], "J": []}</textarea>
+        
+        <!-- Constructor de Grafos -->
+        <div class="md:col-span-2 border p-4 rounded-lg bg-slate-50">
+          <label class="block text-xs font-semibold mb-1">Cargar Grafo Predeterminado:</label>
+          <select id="grafo_presets" onchange="cargarPresetGrafo()" class="w-full border p-2 rounded text-sm mb-4">
+            <option value="vacio">-- Seleccionar --</option>
+            <option value="10">Grafo de 10 Nodos (Actividad 12)</option>
+            <option value="25">Grafo de 25 Nodos (Actividad 12)</option>
+          </select>
+
+          <label class="block text-xs font-semibold mb-1">O añadir conexión manual:</label>
+          <div class="flex gap-2 mb-2">
+            <input id="g_origen_add" placeholder="Origen (A)" class="w-1/4 border p-1 rounded text-sm">
+            <input id="g_destino_add" placeholder="Destino (B)" class="w-1/4 border p-1 rounded text-sm">
+            <input id="g_peso_add" type="number" placeholder="Peso (15)" class="w-1/4 border p-1 rounded text-sm">
+            <button onclick="addArista()" class="w-1/4 bg-green-600 text-white rounded text-sm font-bold">Añadir</button>
+          </div>
+          <p id="grafo_status" class="text-xs text-indigo-600 font-bold">Grafo actual: 0 nodos.</p>
         </div>
+
+        <!-- Controles de Búsqueda -->
         <div>
+          <label class="block text-xs font-semibold mb-1">Buscar ruta:</label>
           <div class="flex gap-2 mb-2">
             <input id="g_origen" value="A" class="w-1/2 border p-2 rounded text-sm" placeholder="Origen">
             <input id="g_destino" value="J" class="w-1/2 border p-2 rounded text-sm" placeholder="Destino">
           </div>
-
-          <label class="block text-xs font-semibold mb-1">Tipo de búsqueda a visualizar:</label>
+          <label class="block text-xs font-semibold mb-1">Tipo de búsqueda:</label>
           <select id="alg_grafo" class="w-full border p-2 rounded mb-3 text-sm">
             <option value="bfs">BFS (Anchura)</option>
             <option value="greedy" selected>Greedy (Voraz)</option>
             <option value="a_star">A* (Estrella)</option>
           </select>
-          <button onclick="ejecutarGrafos()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full mb-2">Analizar y Graficar Ruta</button>
+          <button onclick="ejecutarGrafos()" class="bg-indigo-700 text-white px-4 py-2 rounded text-sm font-semibold w-full">Analizar y Graficar Ruta</button>
         </div>
       </div>
+      
       <div id="mynetwork" class="w-full h-80 border rounded-lg bg-slate-50 mb-4"></div>
       <div id="res_grafos"></div>
     </section>
 
+    <!-- 3. ORDENAMIENTO -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">3. Algoritmos de Ordenamiento</h2>
       <div class="grid md:grid-cols-2 gap-6">
@@ -118,13 +144,38 @@
     function graficarSeccion1(labels, data, labelTitle, color) {
       if(chartAuto) chartAuto.destroy();
       chartAuto = new Chart(document.getElementById('graficaAuto'), {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{ label: labelTitle, data: data, backgroundColor: color }]
-        },
+        type: 'bar', data: { labels: labels, datasets: [{ label: labelTitle, data: data, backgroundColor: color }] },
         options: { scales: { y: { beginAtZero: true } } }
       });
+    }
+
+    // --- 1. LENGUAJES Y AUTÓMATAS ---
+    let automataData = {};
+    
+    function addTransicion() {
+      const o = document.getElementById('t_origen').value.trim();
+      const s = document.getElementById('t_simbolo').value.trim();
+      const d = document.getElementById('t_destino').value.split(',').map(x=>x.trim()).filter(Boolean);
+      if(!o || !s || !d.length) return alert("Llena origen, símbolo y destino.");
+      
+      if(!automataData[o]) automataData[o] = {};
+      automataData[o][s] = d;
+      renderizarListaAuto();
+    }
+
+    function renderizarListaAuto() {
+      const ul = document.getElementById('lista_transiciones');
+      ul.innerHTML = '';
+      for(let orig in automataData) {
+        for(let simb in automataData[orig]) {
+          ul.innerHTML += `<li><span class="font-bold">${orig}</span> --(${simb})--> [${automataData[orig][simb].join(', ')}]</li>`;
+        }
+      }
+    }
+
+    function limpiarAutomata() {
+      automataData = {};
+      renderizarListaAuto();
     }
 
     async function ejecutarLenguaje() {
@@ -137,46 +188,80 @@
       });
       const d = await r.json();
       document.getElementById('res_lenguaje').innerHTML = `<p class="text-green-700 font-bold">Res: { ${d.resultado.join(', ')} }</p>`;
-      
       graficarSeccion1(['L1', 'L2', 'Resultado'], [la.length, lb.length, d.cardinalidad], 'Cantidad de elementos', '#4f46e5');
     }
 
     async function ejecutarAutomata() {
+      if(Object.keys(automataData).length === 0) return alert("Añade al menos una transición al autómata.");
       const tipo = document.getElementById('auto_tipo').value;
       const palabra = document.getElementById('auto_palabra').value;
-      const transiciones = JSON.parse(document.getElementById('auto_trans').value);
+      
       const r = await fetch('/api/automata/evaluar-matriz', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ tipo, palabra, alfabeto: ["0","1"], estados: Object.keys(transiciones), estado_inicial: "q0", estados_finales: ["q2"], transiciones })
+        body: JSON.stringify({ tipo, palabra, alfabeto: ["0","1"], estados: Object.keys(automataData), estado_inicial: "q0", estados_finales: ["q2"], transiciones: automataData })
       });
       const d = await r.json();
       document.getElementById('res_automata').innerHTML = d.pertenece ? '<span class="text-green-600 font-bold">ACEPTADA</span>' : '<span class="text-red-600 font-bold">RECHAZADA</span>';
       
-      const estTotal = Object.keys(transiciones).length;
-      graficarSeccion1(['Estados Totales', 'Estados Recorridos', 'Estados de Aceptación Alcanzados'], 
-                       [estTotal, d.estados_alcanzados.length, d.estados_aceptacion_alcanzados.length], 
+      graficarSeccion1(['Estados Totales', 'Estados Recorridos', 'Aceptación Alcanzados'], 
+                       [Object.keys(automataData).length, d.estados_alcanzados.length, d.estados_aceptacion_alcanzados.length], 
                        'Métricas del Autómata', '#dc2626');
     }
 
+    // --- 2. BÚSQUEDA EN GRAFOS ---
+    let grafoData = {};
+    const presetsGrafos = {
+       "10": {"A": [["B", 15], ["C", 22], ["D", 10]], "B": [["E", 35], ["F", 18]], "C": [["E", 20], ["G", 45]], "D": [["F", 28], ["G", 30]], "E": [["H", 12], ["I", 25]], "F": [["H", 40], ["I", 15]], "G": [["I", 10], ["J", 50]], "H": [["J", 14]], "I": [["J", 8]], "J": []},
+       "25": {"A": [["B", 40], ["D", 36]], "B": [["D", 12], ["G", 30]], "C": [["I", 69], ["J", 34]], "D": [["E", 12], ["F", 25], ["I", 22]], "E": [["C", 34], ["I", 5]], "F": [["H", 25], ["K", 10], ["M", 32]], "G": [["F", 32], ["H", 20], ["K", 15]], "H": [["N", 53], ["K", 20]], "I": [["M", 17], ["O", 34]], "J": [["M", 10], ["L", 14]], "K": [["N", 24], ["S", 34], ["R", 9]], "L": [["Q", 14]], "M": [["R", 32], ["P", 45]], "N": [["T", 52], ["S", 12]], "O": [["P", 45], ["L", 12]], "P": [["X", 59]], "Q": [["R", 28], ["X", 79]], "R": [["T", 64], ["V", 28], ["U", 16]], "S": [["V", 85]], "T": [["W", 72]], "U": [["Y", 19]], "V": [["Y", 19]], "W": [["Y", 25]], "X": [["Y", 38]], "Y": [] }
+    };
+
+    function cargarPresetGrafo() {
+      const val = document.getElementById('grafo_presets').value;
+      if(val !== "vacio") {
+        grafoData = JSON.parse(JSON.stringify(presetsGrafos[val]));
+        if(val === "10") { document.getElementById('g_origen').value = "A"; document.getElementById('g_destino').value = "J"; }
+        if(val === "25") { document.getElementById('g_origen').value = "A"; document.getElementById('g_destino').value = "Y"; }
+      } else {
+        grafoData = {};
+      }
+      actualizarUI_Grafo();
+    }
+
+    function addArista() {
+      const o = document.getElementById('g_origen_add').value.trim();
+      const d = document.getElementById('g_destino_add').value.trim();
+      const p = parseInt(document.getElementById('g_peso_add').value);
+      if(!o || !d || isNaN(p)) return alert("Datos de arista inválidos.");
+
+      if(!grafoData[o]) grafoData[o] = [];
+      if(!grafoData[d]) grafoData[d] = [];
+      grafoData[o].push([d, p]);
+      actualizarUI_Grafo();
+    }
+
+    function actualizarUI_Grafo() {
+      document.getElementById('grafo_status').innerText = `Grafo actual cargado: ${Object.keys(grafoData).length} nodos.`;
+      dibujarGrafo(grafoData, []);
+    }
+
     async function ejecutarGrafos() {
-      const grafo = JSON.parse(document.getElementById('grafo_json').value);
-      const algoritmoSeleccionado = document.getElementById('alg_grafo').value; // Solo toma el seleccionado
+      if(Object.keys(grafoData).length === 0) return alert("Carga un grafo predeterminado o añade aristas primero.");
+      const algoritmoSeleccionado = document.getElementById('alg_grafo').value;
       
       const r = await fetch('/search/comparar-grafos', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ grafo, origen: document.getElementById('g_origen').value, destino: document.getElementById('g_destino').value, algoritmos: [algoritmoSeleccionado], limite_nodos: 1.0 })
+        body: JSON.stringify({ grafo: grafoData, origen: document.getElementById('g_origen').value, destino: document.getElementById('g_destino').value, algoritmos: [algoritmoSeleccionado], limite_nodos: 1.0 })
       });
       const d = await r.json();
       const resultado = d.resultados[0]; 
       
-      dibujarGrafo(grafo, resultado.ruta);
+      dibujarGrafo(grafoData, resultado.ruta);
 
       document.getElementById('res_grafos').innerHTML = `
         <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg mt-4">
-          <p class="font-bold text-indigo-800 text-lg mb-2">Resultados para: ${resultado.algoritmo}</p>
-          <p><strong>Ruta hallada:</strong> ${resultado.ruta.join(' → ') || 'No se encontró ruta'}</p>
-          <p><strong>Costo Total:</strong> ${resultado.costo_camino}</p>
-          <p><strong>Nodos Visitados:</strong> ${resultado.nodos_visitados}</p>
+          <p class="font-bold text-indigo-800 text-lg mb-2">Rendimiento: ${resultado.algoritmo}</p>
+          <p><strong>Ruta:</strong> ${resultado.ruta.join(' → ') || 'Sin ruta'}</p>
+          <p><strong>Costo:</strong> ${resultado.costo_camino} | <strong>Nodos Visitados:</strong> ${resultado.nodos_visitados}</p>
           <p><strong>Tiempo de ejecución:</strong> ${resultado.tiempo_ms} ms</p>
         </div>
       `;
@@ -197,6 +282,8 @@
       }
       new vis.Network(document.getElementById('mynetwork'), {nodes, edges}, {physics: true});
     }
+
+    // --- 3. ORDENAMIENTO ---
     let chartOrd = null;
     async function ejecutarOrdenamiento() {
       const datos = document.getElementById('ord_datos').value.split(',').map(n => parseInt(n));

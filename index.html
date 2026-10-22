@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <header class="bg-indigo-700 text-white p-6 rounded-xl shadow mb-6 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold">Reto Integrador: Frontend GUI</h1>
+      <p class="text-sm opacity-90">Evaluación interactiva sin código manual</p>
+    </div>
+    <a href="/docs" target="_blank" class="bg-white text-indigo-700 px-4 py-2 rounded-lg font-bold text-sm shadow hover:bg-slate-100 transition">
+      Ver Endpoints (FastAPI)
+    </a>
+  </header>
   <meta charset="UTF-8">
   <title>Frontend - Proyecto Integrador</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,7 +46,6 @@
           <div id="res_lenguaje" class="mt-3 text-sm"></div>
         </div>
 
-        <!-- Autómatas Interactivo -->
         <div class="border p-4 rounded-lg bg-slate-50">
           <h3 class="font-bold mb-2">Constructor de Autómatas</h3>
           <div class="flex gap-2 mb-2">
@@ -71,12 +79,10 @@
       </div>
     </section>
 
-    <!-- 2. BÚSQUEDA EN GRAFOS -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">2. Búsqueda en Grafos</h2>
       <div class="grid md:grid-cols-3 gap-4 mb-4">
         
-        <!-- Constructor de Grafos -->
         <div class="md:col-span-2 border p-4 rounded-lg bg-slate-50">
           <label class="block text-xs font-semibold mb-1">Cargar Grafo Predeterminado:</label>
           <select id="grafo_presets" onchange="cargarPresetGrafo()" class="w-full border p-2 rounded text-sm mb-4">
@@ -95,7 +101,6 @@
           <p id="grafo_status" class="text-xs text-indigo-600 font-bold">Grafo actual: 0 nodos.</p>
         </div>
 
-        <!-- Controles de Búsqueda -->
         <div>
           <label class="block text-xs font-semibold mb-1">Buscar ruta:</label>
           <div class="flex gap-2 mb-2">
@@ -116,7 +121,6 @@
       <div id="res_grafos"></div>
     </section>
 
-    <!-- 3. ORDENAMIENTO -->
     <section class="bg-white p-6 rounded-xl shadow mb-8">
       <h2 class="text-xl font-bold text-indigo-700 border-b pb-2 mb-4">3. Algoritmos de Ordenamiento</h2>
       <div class="grid md:grid-cols-2 gap-6">
@@ -149,7 +153,6 @@
       });
     }
 
-    // --- 1. LENGUAJES Y AUTÓMATAS ---
     let automataData = {};
     
     function addTransicion() {
@@ -208,7 +211,6 @@
                        'Métricas del Autómata', '#dc2626');
     }
 
-    // --- 2. BÚSQUEDA EN GRAFOS ---
     let grafoData = {};
     const presetsGrafos = {
        "10": {"A": [["B", 15], ["C", 22], ["D", 10]], "B": [["E", 35], ["F", 18]], "C": [["E", 20], ["G", 45]], "D": [["F", 28], ["G", 30]], "E": [["H", 12], ["I", 25]], "F": [["H", 40], ["I", 15]], "G": [["I", 10], ["J", 50]], "H": [["J", 14]], "I": [["J", 8]], "J": []},
@@ -283,7 +285,6 @@
       new vis.Network(document.getElementById('mynetwork'), {nodes, edges}, {physics: true});
     }
 
-    // --- 3. ORDENAMIENTO ---
     let chartOrd = null;
     async function ejecutarOrdenamiento() {
       const datos = document.getElementById('ord_datos').value.split(',').map(n => parseInt(n));

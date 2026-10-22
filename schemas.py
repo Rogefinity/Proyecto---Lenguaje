@@ -1,14 +1,14 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Tuple, Optional
 
-# --- ACTIVIDAD 3: LENGUAJES ---
+#ACTIVIDAD 3: LENGUAJES
 class LenguajesInput(BaseModel):
     lenguaje_a: List[str] = Field(..., example=["a", "ab", "b"])
     lenguaje_b: List[str] = Field(default=[], example=["b", "ba", "bb"])
     operacion: str = Field(..., description="union, interseccion, diferencia, concatenacion, potencia, kleene, inverso")
     potencia: int = Field(default=2, ge=0, le=4)
 
-# --- ACTIVIDAD 6: AUTÓMATAS (AFD, AFND, AFND-e) ---
+#ACTIVIDAD 6: AUTÓMATAS (AFD, AFND, AFND-e)
 class AutomataInput(BaseModel):
     tipo: str = Field(..., example="AFND-e", description="AFD, AFND o AFND-e")
     alfabeto: List[str] = Field(..., example=["0", "1"])
@@ -26,7 +26,7 @@ class AutomataInput(BaseModel):
     )
     palabra: str = Field(..., example="01")
 
-# --- ACTIVIDAD 12: GRAFOS Y BÚSQUEDA ---
+#ACTIVIDAD 12: GRAFOS Y BÚSQUEDA
 class GrafoInput(BaseModel):
     grafo: Dict[str, List[Tuple[str, int]]] = Field(
         ...,
@@ -48,7 +48,7 @@ class GrafoInput(BaseModel):
     algoritmos: List[str] = Field(default=["bfs", "greedy", "a_star"])
     limite_nodos: float = Field(default=1.0, ge=0.1, le=1.0)
 
-# --- ACTIVIDAD 13: ORDENAMIENTO ---
+#ACTIVIDAD 13: ORDENAMIENTO
 class OrdenamientoInput(BaseModel):
     datos: List[int] = Field(..., example=[64, 34, 25, 12, 22, 11, 90, 5, 77, 1, 43, 88])
     algoritmos: List[str] = Field(
